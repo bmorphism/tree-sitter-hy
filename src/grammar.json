@@ -76,12 +76,32 @@
         {
           "type": "SYMBOL",
           "name": "discard"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "reader_macro"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "unpack"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "unpack_map"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "annotate"
         }
       ]
     },
     "_sequence": {
       "type": "CHOICE",
       "members": [
+        {
+          "type": "SYMBOL",
+          "name": "dot_expression"
+        },
         {
           "type": "SYMBOL",
           "name": "expression"
@@ -101,6 +121,30 @@
         {
           "type": "SYMBOL",
           "name": "dict"
+        }
+      ]
+    },
+    "dot_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_element"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
         }
       ]
     },
@@ -269,6 +313,62 @@
         }
       ]
     },
+    "unpack": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#*"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_form"
+        }
+      ]
+    },
+    "unpack_map": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#**"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_form"
+        }
+      ]
+    },
+    "annotate": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#^"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_form"
+        }
+      ]
+    },
+    "reader_macro": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "symbol"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_form"
+        }
+      ]
+    },
     "_identifier": {
       "type": "CHOICE",
       "members": [
@@ -283,6 +383,10 @@
         {
           "type": "SYMBOL",
           "name": "keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dot_symbol"
         },
         {
           "type": "SYMBOL",
@@ -501,6 +605,28 @@
         ]
       }
     },
+    "dot_symbol": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "."
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "IMMEDIATE_TOKEN",
+              "content": {
+                "type": "STRING",
+                "value": "."
+              }
+            }
+          }
+        ]
+      }
+    },
     "symbol": {
       "type": "TOKEN",
       "content": {
@@ -590,17 +716,8 @@
             ]
           },
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "PATTERN",
-                "value": "\"([^\"\\\\]|\\\\.)*\""
-              },
-              {
-                "type": "PATTERN",
-                "value": "'([^'\\\\]|\\\\.)*'"
-              }
-            ]
+            "type": "PATTERN",
+            "value": "\"([^\"\\\\]|\\\\.)*\""
           }
         ]
       }

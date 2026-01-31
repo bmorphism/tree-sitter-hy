@@ -8,8 +8,13 @@
 (unquote) @operator
 (unquote_splice) @operator
 (discard) @operator
+(unpack) @operator
+(unpack_map) @operator
+(annotate) @operator
+(reader_macro) @operator
 
 (symbol) @variable
+(dot_symbol) @variable
 (dotted_identifier "." @punctuation.delimiter)
 (keyword) @field
 

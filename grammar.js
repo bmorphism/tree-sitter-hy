@@ -25,10 +25,15 @@ module.exports = grammar({
         $.unquote,
         $.unquote_splice,
         $.discard,
+        $.reader_macro,
+        $.unpack,
+        $.unpack_map,
+        $.annotate,
       ),
     _sequence: ($) =>
-      choice($.expression, $.list, $.tuple, $.set, $.dict),
+      choice($.dot_expression, $.expression, $.list, $.tuple, $.set, $.dict),
 
+    dot_expression: ($) => seq("(", ".", repeat1($._element), ")"),
     expression: ($) => seq("(", repeat1($._element), ")"),
     list: ($) => seq("[", repeat($._element), "]"),
     tuple: ($) => seq("#(", repeat($._element), ")"),
@@ -40,9 +45,19 @@ module.exports = grammar({
     unquote_splice: ($) => seq("~@", $._form),
     unquote: ($) => seq("~", $._form),
     discard: ($) => seq("#_", $._form),
+    unpack: ($) => seq("#*", $._form),
+    unpack_map: ($) => seq("#**", $._form),
+    annotate: ($) => seq("#^", $._form),
+    reader_macro: ($) => seq("#", $.symbol, $._form),
 
     _identifier: ($) =>
-      choice($._numeric_literal, $.dotted_identifier, $.keyword, $.symbol),
+      choice(
+        $._numeric_literal,
+        $.dotted_identifier,
+        $.keyword,
+        $.dot_symbol,
+        $.symbol,
+      ),
 
     _numeric_literal: ($) => choice($.int, $.complex, $.float),
     int: () => token(seq(optional(regexp.signPrefix), regexp.intUnsigned)),
@@ -74,6 +89,7 @@ module.exports = grammar({
       ),
 
     keyword: () => token(seq(":", repeat(regexp.symbolChar))),
+    dot_symbol: () => token(seq(".", repeat(token.immediate(".")))),
     symbol: () => token(repeat1(regexp.symbolChar)),
     _symbol_immediate: ($) =>
       alias(token.immediate(repeat1(regexp.symbolChar)), $.symbol),
@@ -85,10 +101,7 @@ module.exports = grammar({
           optional(
             choice("r", "b", "f", "fr", "rf", "br", "rb", "fb", "bf"),
           ),
-          choice(
-            /"([^"\\]|\\.)*"/,
-            /'([^'\\]|\\.)*'/,
-          ),
+          /"([^"\\]|\\.)*"/,
         ),
       ),
 
