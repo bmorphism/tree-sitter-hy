@@ -658,6 +658,10 @@
         {
           "type": "SYMBOL",
           "name": "string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bracket_string"
         }
       ]
     },
@@ -720,6 +724,13 @@
             "value": "\"([^\"\\\\]|\\\\.)*\""
           }
         ]
+      }
+    },
+    "bracket_string": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "#\\[[^\\[\\]\\n]*\\[(?:.|\\n)*?\\][^\\[\\]\\n]*\\]"
       }
     },
     "comment": {

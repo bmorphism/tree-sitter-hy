@@ -12,6 +12,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "complex",
           "named": true
         },
@@ -112,6 +116,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -222,6 +230,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "complex",
           "named": true
         },
@@ -322,6 +334,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -447,6 +463,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "comment",
           "named": true
         },
@@ -551,6 +571,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -661,6 +685,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "complex",
           "named": true
         },
@@ -761,6 +789,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -867,6 +899,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "complex",
           "named": true
         },
@@ -967,6 +1003,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -1074,6 +1114,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -1188,6 +1232,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "comment",
           "named": true
         },
@@ -1295,6 +1343,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "complex",
           "named": true
         },
@@ -1395,6 +1447,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -1501,6 +1557,10 @@
           "named": true
         },
         {
+          "type": "bracket_string",
+          "named": true
+        },
+        {
           "type": "complex",
           "named": true
         },
@@ -1601,6 +1661,10 @@
       "types": [
         {
           "type": "annotate",
+          "named": true
+        },
+        {
+          "type": "bracket_string",
           "named": true
         },
         {
@@ -1749,6 +1813,10 @@
   {
     "type": "`",
     "named": false
+  },
+  {
+    "type": "bracket_string",
+    "named": true
   },
   {
     "type": "comment",

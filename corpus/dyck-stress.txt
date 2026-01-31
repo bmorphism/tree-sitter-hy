@@ -1,0 +1,84 @@
+================================================================================
+dyck_reader_sugar
+================================================================================
+
+('`(~@[(#* [a b]) {#** {"x" 1 "y" 2}}] {:k (#^ int v)}))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression
+    (quote
+      (quasiquote
+        (expression
+          (unquote_splice
+            (list
+              (expression
+                (unpack
+                  (list
+                    (symbol)
+                    (symbol))))
+              (dict
+                (unpack_map
+                  (dict
+                    (string)
+                    (int)
+                    (string)
+                    (int))))))
+          (dict
+            (keyword)
+            (expression
+              (annotate
+                (symbol))
+              (symbol))))))))
+
+================================================================================
+dyck_mixed_delims
+================================================================================
+
+((fn [x] {x [(list 1 2) #{3 4} {(tuple 5 6) 7}]}))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression
+    (expression
+      (symbol)
+      (list
+        (symbol))
+      (dict
+        (symbol)
+        (list
+          (expression
+            (symbol)
+            (int)
+            (int))
+          (set
+            (int)
+            (int))
+          (dict
+            (expression
+              (symbol)
+              (int)
+              (int))
+            (int)))))))
+
+================================================================================
+dyck_dot_form_nested
+================================================================================
+
+(. (foo.bar (baz)) (qux) __name__)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (dot_expression
+    (expression
+      (dotted_identifier
+        (symbol)
+        (symbol))
+      (expression
+        (symbol)))
+    (expression
+      (symbol))
+    (symbol)))

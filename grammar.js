@@ -94,7 +94,7 @@ module.exports = grammar({
     _symbol_immediate: ($) =>
       alias(token.immediate(repeat1(regexp.symbolChar)), $.symbol),
 
-    _string: ($) => choice($.string),
+    _string: ($) => choice($.string, $.bracket_string),
     string: () =>
       token(
         seq(
@@ -104,6 +104,8 @@ module.exports = grammar({
           /"([^"\\]|\\.)*"/,
         ),
       ),
+    bracket_string: () =>
+      token(/#\[[^\[\]\n]*\[(?:.|\n)*?\][^\[\]\n]*\]/),
 
     comment: () => /;.*/,
   },
