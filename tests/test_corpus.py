@@ -43,14 +43,45 @@ def _hy_files(root: Path) -> list[Path]:
 
 
 def _parse_file(path: Path) -> str:
-    cmd = ["npx", "tree-sitter", "parse", "--quiet", str(path)]
-    proc = subprocess.run(
-        cmd,
-        cwd=REPO_ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
+    home = Path.home()
+    config_path = (
+        home
+        / "Library"
+        / "Application Support"
+        / "tree-sitter"
+        / "config.json"
     )
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    had_config = config_path.exists()
+    original = config_path.read_text(encoding="utf-8") if had_config else None
+    try:
+        config_path.write_text(
+            f'{{"parser-directories": ["{REPO_ROOT.parent}"]}}', encoding="utf-8"
+        )
+        cmd = [
+            "npx",
+            "tree-sitter",
+            "parse",
+            "--quiet",
+            "--scope",
+            "source.hy",
+            str(path),
+        ]
+        proc = subprocess.run(
+            cmd,
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    finally:
+        if had_config and original is not None:
+            config_path.write_text(original, encoding="utf-8")
+        else:
+            try:
+                config_path.unlink()
+            except FileNotFoundError:
+                pass
     stdout = proc.stdout or ""
     stderr = proc.stderr or ""
     if proc.returncode != 0:
@@ -69,5 +100,15 @@ def test_parse_corpus(root: Path) -> None:
     files = _hy_files(root)
     if not files:
         pytest.skip(f"No .hy files under {root}")
+    failures: list[str] = []
     for path in files:
-        _parse_file(path)
+        try:
+            _parse_file(path)
+        except AssertionError as exc:
+            failures.append(f"{path}: {exc}")
+    if failures:
+        head = "\n".join(failures[:10])
+        more = "" if len(failures) <= 10 else f"\n... and {len(failures) - 10} more"
+        raise AssertionError(
+            f"{len(failures)} parse failures under {root}:\n{head}{more}"
+        )
