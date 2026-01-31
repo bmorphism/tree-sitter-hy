@@ -15,11 +15,31 @@ module.exports = grammar({
 
     _element: ($) => choice($.comment, $._form),
 
-    _form: ($) => choice($._identifier, $._sequence, $._string),
-    _sequence: ($) => choice($.expression, $.list),
+    _form: ($) =>
+      choice(
+        $._identifier,
+        $._sequence,
+        $._string,
+        $.quote,
+        $.quasiquote,
+        $.unquote,
+        $.unquote_splice,
+        $.discard,
+      ),
+    _sequence: ($) =>
+      choice($.expression, $.list, $.tuple, $.set, $.dict),
 
     expression: ($) => seq("(", repeat1($._element), ")"),
     list: ($) => seq("[", repeat($._element), "]"),
+    tuple: ($) => seq("#(", repeat($._element), ")"),
+    set: ($) => seq("#{", repeat($._element), "}"),
+    dict: ($) => seq("{", repeat($._element), "}"),
+
+    quote: ($) => seq("'", $._form),
+    quasiquote: ($) => seq("`", $._form),
+    unquote_splice: ($) => seq("~@", $._form),
+    unquote: ($) => seq("~", $._form),
+    discard: ($) => seq("#_", $._form),
 
     _identifier: ($) =>
       choice($._numeric_literal, $.dotted_identifier, $.keyword, $.symbol),
@@ -59,7 +79,18 @@ module.exports = grammar({
       alias(token.immediate(repeat1(regexp.symbolChar)), $.symbol),
 
     _string: ($) => choice($.string),
-    string: () => /"[^"]*"/,
+    string: () =>
+      token(
+        seq(
+          optional(
+            choice("r", "b", "f", "fr", "rf", "br", "rb", "fb", "bf"),
+          ),
+          choice(
+            /"([^"\\]|\\.)*"/,
+            /'([^'\\]|\\.)*'/,
+          ),
+        ),
+      ),
 
     comment: () => /;.*/,
   },

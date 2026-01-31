@@ -1,7 +1,13 @@
-["(" ")" "[" "]"] @punctuation.bracket
+["(" ")" "[" "]" "{" "}"] @punctuation.bracket
 (comment) @comment
 (string) @string
 (int) @number
+
+(quote) @operator
+(quasiquote) @operator
+(unquote) @operator
+(unquote_splice) @operator
+(discard) @operator
 
 (symbol) @variable
 (dotted_identifier "." @punctuation.delimiter)
