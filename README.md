@@ -19,29 +19,34 @@ tracking Hy 1.x. Compared to upstream (alpha, Hy 0.27), this fork:
 pnpm install --ignore-scripts            # tree-sitter-cli 0.20.8 devDep
 ./node_modules/.bin/tree-sitter generate # regenerate src/parser.c from grammar.js
 ./node_modules/.bin/tree-sitter test     # run corpus (31 cases)
-cc -O2 -shared -fPIC -I src src/parser.c -o libtree-sitter-hy.dylib
+./scripts/build-dylib.sh                 # → dist/hy-1.2.0/{libtree-sitter-hy.dylib,hy.so}
+./scripts/build-wasm.sh                  # → dist/hy-1.2.0/tree-sitter-hy.wasm  (Apple container)
 ```
 
-Built artifacts checked in at the repo root:
+Build outputs land in **`dist/hy-<VERSION>/`** and are **gitignored** — rebuild
+on demand. Per-version frozen bundles (`tree-sitter-hy-<VERSION>.tar.gz`) are
+also staged in `dist/` alongside multi-algorithm checksum files
+(`SHA256SUMS`, `SHA512SUMS`, `SHA3-256SUMS`, `SHA3-512SUMS`, `BLAKE2b-256SUMS`,
+`SHAKE256-512SUMS`, `CHECKSUMS.txt`). Each bundle contains:
 
 - `libtree-sitter-hy.dylib` — macOS arm64 shared library, exports `tree_sitter_hy`
 - `hy.so` — Linux-style filename alias (same Mach-O content on macOS)
 - `tree-sitter-hy.wasm` — WASM module (SIDE_MODULE=2, exports `_tree_sitter_hy`)
+- `corpus.txt` — the version-specific corpus test cases
+- `manifest.json` — `hy_version`, `grammar_commit`, per-artifact sha256
+
+Versions covered: `hy-{0.28.0, 0.29.0, 1.0.0, 1.1.0, 1.2.0}`. Override the
+target with `HY_VERSION=1.1.0 ./scripts/build-dylib.sh` etc.
 
 ### WASM via Apple `container` (no Docker, no local emcc)
 
 `scripts/build-wasm.sh` builds the WASM artifact through Apple's native
 containerization CLI (`container`, shipped with macOS 15+). No Docker daemon
 and no local Emscripten install are required — the script pulls
-`emscripten/emsdk:3.1.29` into an Apple VM and runs `emcc` there:
-
-```sh
-./scripts/build-wasm.sh          # produces tree-sitter-hy.wasm
-```
-
-The script starts the container apiserver if needed (`container system start`)
-and uses `--arch amd64` because the `emscripten/emsdk` image is amd64-only —
-Apple's containerization handles the architecture transparently.
+`emscripten/emsdk:3.1.29` into an Apple VM and runs `emcc` there with
+`--arch amd64` (the emscripten/emsdk image is amd64-only; container's VM
+handles the architecture transparently). `container system start` runs
+automatically if the apiserver is down.
 
 ## Editor integration
 

@@ -2,11 +2,18 @@
 # Build tree-sitter-hy.wasm using Apple's native container CLI (macOS 15+).
 # No Docker daemon, no local emscripten install — Apple VM runs emscripten/emsdk:3.1.29.
 #
+# Writes output into dist/hy-<VERSION>/tree-sitter-hy.wasm.
+# VERSION defaults to 1.2.0; override with `HY_VERSION=1.1.0 ./scripts/build-wasm.sh`.
+#
 # Requires: `container` CLI (ships with macOS 15+). `container system start` once per boot.
 
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+
+HY_VERSION="${HY_VERSION:-1.2.0}"
+OUT_DIR="dist/hy-${HY_VERSION}"
+mkdir -p "$OUT_DIR"
 
 if ! command -v container >/dev/null 2>&1; then
   echo "error: \`container\` CLI not found (Apple native containerization, macOS 15+)" >&2
@@ -30,6 +37,6 @@ container run --rm --arch amd64 \
        -s 'EXPORTED_FUNCTIONS=["_tree_sitter_hy"]' \
        -fno-exceptions -std=c99 \
        -I src src/parser.c \
-       -o tree-sitter-hy.wasm
+       -o "$OUT_DIR/tree-sitter-hy.wasm"
 
-echo "built: $(ls -la tree-sitter-hy.wasm)"
+echo "built: $(ls -la $OUT_DIR/tree-sitter-hy.wasm)"
