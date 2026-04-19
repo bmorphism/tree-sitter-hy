@@ -26,10 +26,22 @@ Built artifacts checked in at the repo root:
 
 - `libtree-sitter-hy.dylib` — macOS arm64 shared library, exports `tree_sitter_hy`
 - `hy.so` — Linux-style filename alias (same Mach-O content on macOS)
+- `tree-sitter-hy.wasm` — WASM module (SIDE_MODULE=2, exports `_tree_sitter_hy`)
 
-WASM build is available via `tree-sitter build-wasm` but requires either `emcc`
-on `PATH` or a running Docker daemon (tree-sitter 0.20.8 delegates to one or
-the other). Not built here.
+### WASM via Apple `container` (no Docker, no local emcc)
+
+`scripts/build-wasm.sh` builds the WASM artifact through Apple's native
+containerization CLI (`container`, shipped with macOS 15+). No Docker daemon
+and no local Emscripten install are required — the script pulls
+`emscripten/emsdk:3.1.29` into an Apple VM and runs `emcc` there:
+
+```sh
+./scripts/build-wasm.sh          # produces tree-sitter-hy.wasm
+```
+
+The script starts the container apiserver if needed (`container system start`)
+and uses `--arch amd64` because the `emscripten/emsdk` image is amd64-only —
+Apple's containerization handles the architecture transparently.
 
 ## Editor integration
 
