@@ -1,1 +1,4 @@
 node_modules/
+.pytest_cache/
+/tree-sitter
+pnpm-lock.yaml
